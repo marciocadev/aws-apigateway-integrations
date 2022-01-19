@@ -5,9 +5,22 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   name: "aws-apigatewa-integrations",
   projenrcTs: true,
 
-  // deps: [],                /* Runtime dependencies of this module. */
-  // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
-  // devDeps: [],             /* Build dependencies for this module. */
-  // packageName: undefined,  /* The "name" in package.json. */
+  release: true,
+
+  codeCov: true,
+
+  prettier: true,
+  eslint: true,
+  tsconfig: {
+    compilerOptions: {
+      lib: ["dom", "es2019"],
+    },
+  },
+
+  deps: [
+    "@types/aws-lambda",
+    "@aws-sdk/client-dynamodb",
+    "@aws-sdk/util-dynamodb",
+  ],
 });
 project.synth();

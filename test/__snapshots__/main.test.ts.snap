@@ -1,0 +1,1051 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot 1`] = `
+Object {
+  "Outputs": Object {
+    "ApiGatewayIntegrationsEndpoint519E83F2": Object {
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "https://",
+            Object {
+              "Ref": "ApiGatewayIntegrations23935DC5",
+            },
+            ".execute-api.",
+            Object {
+              "Ref": "AWS::Region",
+            },
+            ".",
+            Object {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            Object {
+              "Ref": "ApiGatewayIntegrationsDeploymentStageprod2739759D",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
+  },
+  "Parameters": Object {
+    "BootstrapVersion": Object {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": Object {
+    "ApiGatewayIntegrations23935DC5": Object {
+      "Properties": Object {
+        "Name": "apigateway-integrations",
+      },
+      "Type": "AWS::ApiGateway::RestApi",
+    },
+    "ApiGatewayIntegrationsAccountB6509206": Object {
+      "DependsOn": Array [
+        "ApiGatewayIntegrations23935DC5",
+      ],
+      "Properties": Object {
+        "CloudWatchRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "ApiGatewayIntegrationsCloudWatchRoleDD86DF54",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+    },
+    "ApiGatewayIntegrationsCloudWatchRoleDD86DF54": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "ApiGatewayIntegrationsDeployment561CBE9E73071c9ca1b377c98a7ad9b15d6dc0c9": Object {
+      "DependsOn": Array [
+        "ApiGatewayIntegrationslambdaPOST1110621C",
+        "ApiGatewayIntegrationslambda55C388C0",
+        "ApiGatewayIntegrationssnsPOST79DAF2CD",
+        "ApiGatewayIntegrationssnsAAD08303",
+        "ApiGatewayIntegrationssqsPOST4EBC27C1",
+        "ApiGatewayIntegrationssqs7070E481",
+        "PostModelD4C7F5B5",
+        "PostValidator2B2DDAD7",
+      ],
+      "Properties": Object {
+        "Description": "Automatically created by the RestApi construct",
+        "RestApiId": Object {
+          "Ref": "ApiGatewayIntegrations23935DC5",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "ApiGatewayIntegrationsDeploymentStageprod2739759D": Object {
+      "DependsOn": Array [
+        "ApiGatewayIntegrationsAccountB6509206",
+      ],
+      "Properties": Object {
+        "DeploymentId": Object {
+          "Ref": "ApiGatewayIntegrationsDeployment561CBE9E73071c9ca1b377c98a7ad9b15d6dc0c9",
+        },
+        "RestApiId": Object {
+          "Ref": "ApiGatewayIntegrations23935DC5",
+        },
+        "StageName": "prod",
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "ApiGatewayIntegrationslambda55C388C0": Object {
+      "Properties": Object {
+        "ParentId": Object {
+          "Fn::GetAtt": Array [
+            "ApiGatewayIntegrations23935DC5",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "lambda",
+        "RestApiId": Object {
+          "Ref": "ApiGatewayIntegrations23935DC5",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "ApiGatewayIntegrationslambdaPOST1110621C": Object {
+      "Properties": Object {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": Object {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "MyLambdaIntegrationMyLambda6CEAA0DC",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "RequestModels": Object {
+          "application/json": Object {
+            "Ref": "PostModelD4C7F5B5",
+          },
+        },
+        "RequestValidatorId": Object {
+          "Ref": "PostValidator2B2DDAD7",
+        },
+        "ResourceId": Object {
+          "Ref": "ApiGatewayIntegrationslambda55C388C0",
+        },
+        "RestApiId": Object {
+          "Ref": "ApiGatewayIntegrations23935DC5",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "ApiGatewayIntegrationslambdaPOSTApiPermissionTesttestApiGatewayIntegrations71560696POSTlambda5F3EAA8E": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "MyLambdaIntegrationMyLambda6CEAA0DC",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              Object {
+                "Ref": "ApiGatewayIntegrations23935DC5",
+              },
+              "/test-invoke-stage/POST/lambda",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "ApiGatewayIntegrationslambdaPOSTApiPermissiontestApiGatewayIntegrations71560696POSTlambdaEBF9B9F0": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "MyLambdaIntegrationMyLambda6CEAA0DC",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              Object {
+                "Ref": "ApiGatewayIntegrations23935DC5",
+              },
+              "/",
+              Object {
+                "Ref": "ApiGatewayIntegrationsDeploymentStageprod2739759D",
+              },
+              "/POST/lambda",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "ApiGatewayIntegrationssnsAAD08303": Object {
+      "Properties": Object {
+        "ParentId": Object {
+          "Fn::GetAtt": Array [
+            "ApiGatewayIntegrations23935DC5",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "sns",
+        "RestApiId": Object {
+          "Ref": "ApiGatewayIntegrations23935DC5",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "ApiGatewayIntegrationssnsPOST79DAF2CD": Object {
+      "Properties": Object {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": Object {
+          "Credentials": Object {
+            "Fn::GetAtt": Array [
+              "MySnsIntegrationApiGatewaySnsRole2F461095",
+              "Arn",
+            ],
+          },
+          "IntegrationHttpMethod": "POST",
+          "IntegrationResponses": Array [
+            Object {
+              "ResponseTemplates": Object {
+                "application/json": "",
+              },
+              "StatusCode": "200",
+            },
+          ],
+          "RequestParameters": Object {
+            "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
+          },
+          "RequestTemplates": Object {
+            "application/json": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "Action=Publish&TargetArn=$util.urlEncode('",
+                  Object {
+                    "Ref": "MySnsIntegrationTopicADA14C95",
+                  },
+                  "')&Message=$input.body&",
+                ],
+              ],
+            },
+          },
+          "Type": "AWS",
+          "Uri": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+                ":sns:path/",
+                Object {
+                  "Ref": "AWS::AccountId",
+                },
+                "/",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "MySnsIntegrationTopicADA14C95",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "MethodResponses": Array [
+          Object {
+            "StatusCode": "200",
+          },
+        ],
+        "RequestModels": Object {
+          "application/json": Object {
+            "Ref": "PostModelD4C7F5B5",
+          },
+        },
+        "RequestValidatorId": Object {
+          "Ref": "PostValidator2B2DDAD7",
+        },
+        "ResourceId": Object {
+          "Ref": "ApiGatewayIntegrationssnsAAD08303",
+        },
+        "RestApiId": Object {
+          "Ref": "ApiGatewayIntegrations23935DC5",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "ApiGatewayIntegrationssqs7070E481": Object {
+      "Properties": Object {
+        "ParentId": Object {
+          "Fn::GetAtt": Array [
+            "ApiGatewayIntegrations23935DC5",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "sqs",
+        "RestApiId": Object {
+          "Ref": "ApiGatewayIntegrations23935DC5",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "ApiGatewayIntegrationssqsPOST4EBC27C1": Object {
+      "Properties": Object {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": Object {
+          "Credentials": Object {
+            "Fn::GetAtt": Array [
+              "MySqsIntegrationApiGatewaySqsRole1EEBC21A",
+              "Arn",
+            ],
+          },
+          "IntegrationHttpMethod": "POST",
+          "IntegrationResponses": Array [
+            Object {
+              "ResponseTemplates": Object {
+                "application/json": "",
+              },
+              "StatusCode": "200",
+            },
+          ],
+          "RequestParameters": Object {
+            "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
+          },
+          "RequestTemplates": Object {
+            "application/json": "Action=SendMessage&MessageBody=$input.body",
+          },
+          "Type": "AWS",
+          "Uri": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+                ":sqs:path/",
+                Object {
+                  "Ref": "AWS::AccountId",
+                },
+                "/",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "MySqsIntegrationMyQueue86A365E0",
+                    "QueueName",
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "MethodResponses": Array [
+          Object {
+            "StatusCode": "200",
+          },
+        ],
+        "RequestModels": Object {
+          "application/json": Object {
+            "Ref": "PostModelD4C7F5B5",
+          },
+        },
+        "RequestValidatorId": Object {
+          "Ref": "PostValidator2B2DDAD7",
+        },
+        "ResourceId": Object {
+          "Ref": "ApiGatewayIntegrationssqs7070E481",
+        },
+        "RestApiId": Object {
+          "Ref": "ApiGatewayIntegrations23935DC5",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "MyLambdaIntegrationMyLambda6CEAA0DC": Object {
+      "DependsOn": Array [
+        "MyLambdaIntegrationMyLambdaServiceRoleDefaultPolicy02230134",
+        "MyLambdaIntegrationMyLambdaServiceRole86D88EE7",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "da1628a708fb8015756893515e1554b95f08b75e97a227e85b877d7a9002f83c.zip",
+        },
+        "Environment": Object {
+          "Variables": Object {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "TABLE_NAME": Object {
+              "Ref": "TableCD117FA1",
+            },
+          },
+        },
+        "Handler": "index.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "MyLambdaIntegrationMyLambdaServiceRole86D88EE7",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "MyLambdaIntegrationMyLambdaEventInvokeConfig7AD2AB9C": Object {
+      "Properties": Object {
+        "FunctionName": Object {
+          "Ref": "MyLambdaIntegrationMyLambda6CEAA0DC",
+        },
+        "MaximumRetryAttempts": 1,
+        "Qualifier": "$LATEST",
+      },
+      "Type": "AWS::Lambda::EventInvokeConfig",
+    },
+    "MyLambdaIntegrationMyLambdaServiceRole86D88EE7": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "MyLambdaIntegrationMyLambdaServiceRoleDefaultPolicy02230134": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "TableCD117FA1",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "MyLambdaIntegrationMyLambdaServiceRoleDefaultPolicy02230134",
+        "Roles": Array [
+          Object {
+            "Ref": "MyLambdaIntegrationMyLambdaServiceRole86D88EE7",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "MySnsIntegrationApiGatewaySnsRole2F461095": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "MySnsIntegrationApiGatewaySnsRoleDefaultPolicy6318B3E9": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sns:Publish",
+              "Effect": "Allow",
+              "Resource": Object {
+                "Ref": "MySnsIntegrationTopicADA14C95",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "MySnsIntegrationApiGatewaySnsRoleDefaultPolicy6318B3E9",
+        "Roles": Array [
+          Object {
+            "Ref": "MySnsIntegrationApiGatewaySnsRole2F461095",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "MySnsIntegrationLambda7EF9C9E9": Object {
+      "DependsOn": Array [
+        "MySnsIntegrationLambdaServiceRoleDefaultPolicyE4374CAF",
+        "MySnsIntegrationLambdaServiceRoleA7967174",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "19ac1dd30824cb937611b53312ec3ceceeab655168f15bb55ac623f061f106c1.zip",
+        },
+        "Environment": Object {
+          "Variables": Object {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "TABLE_NAME": Object {
+              "Ref": "TableCD117FA1",
+            },
+          },
+        },
+        "Handler": "index.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "MySnsIntegrationLambdaServiceRoleA7967174",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "MySnsIntegrationLambdaAllowInvoketestMySnsIntegrationTopic7142D76FA3C4BFCC": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "MySnsIntegrationLambda7EF9C9E9",
+            "Arn",
+          ],
+        },
+        "Principal": "sns.amazonaws.com",
+        "SourceArn": Object {
+          "Ref": "MySnsIntegrationTopicADA14C95",
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "MySnsIntegrationLambdaEventInvokeConfig5AF7ABCD": Object {
+      "Properties": Object {
+        "FunctionName": Object {
+          "Ref": "MySnsIntegrationLambda7EF9C9E9",
+        },
+        "MaximumRetryAttempts": 0,
+        "Qualifier": "$LATEST",
+      },
+      "Type": "AWS::Lambda::EventInvokeConfig",
+    },
+    "MySnsIntegrationLambdaServiceRoleA7967174": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "MySnsIntegrationLambdaServiceRoleDefaultPolicyE4374CAF": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "TableCD117FA1",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "MySnsIntegrationLambdaServiceRoleDefaultPolicyE4374CAF",
+        "Roles": Array [
+          Object {
+            "Ref": "MySnsIntegrationLambdaServiceRoleA7967174",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "MySnsIntegrationLambdaTopicCF927640": Object {
+      "Properties": Object {
+        "Endpoint": Object {
+          "Fn::GetAtt": Array [
+            "MySnsIntegrationLambda7EF9C9E9",
+            "Arn",
+          ],
+        },
+        "Protocol": "lambda",
+        "TopicArn": Object {
+          "Ref": "MySnsIntegrationTopicADA14C95",
+        },
+      },
+      "Type": "AWS::SNS::Subscription",
+    },
+    "MySnsIntegrationTopicADA14C95": Object {
+      "Properties": Object {
+        "TopicName": "apigateway-topic",
+      },
+      "Type": "AWS::SNS::Topic",
+    },
+    "MySqsIntegrationApiGatewaySqsRole1EEBC21A": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "MySqsIntegrationApiGatewaySqsRoleDefaultPolicy48F5E5A2": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "sqs:SendMessage",
+                "sqs:GetQueueAttributes",
+                "sqs:GetQueueUrl",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "MySqsIntegrationMyQueue86A365E0",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "MySqsIntegrationApiGatewaySqsRoleDefaultPolicy48F5E5A2",
+        "Roles": Array [
+          Object {
+            "Ref": "MySqsIntegrationApiGatewaySqsRole1EEBC21A",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "MySqsIntegrationLambda7FC99B39": Object {
+      "DependsOn": Array [
+        "MySqsIntegrationLambdaServiceRoleDefaultPolicyE3E25BD7",
+        "MySqsIntegrationLambdaServiceRole9070BB37",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "be0c54c1e217e812d53bb7cb8d35e21a2a927cd5c84b80483d242c8e4491e380.zip",
+        },
+        "Environment": Object {
+          "Variables": Object {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "TABLE_NAME": Object {
+              "Ref": "TableCD117FA1",
+            },
+          },
+        },
+        "Handler": "index.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "MySqsIntegrationLambdaServiceRole9070BB37",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "MySqsIntegrationLambdaEventInvokeConfig27CF6906": Object {
+      "Properties": Object {
+        "FunctionName": Object {
+          "Ref": "MySqsIntegrationLambda7FC99B39",
+        },
+        "MaximumRetryAttempts": 0,
+        "Qualifier": "$LATEST",
+      },
+      "Type": "AWS::Lambda::EventInvokeConfig",
+    },
+    "MySqsIntegrationLambdaServiceRole9070BB37": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "MySqsIntegrationLambdaServiceRoleDefaultPolicyE3E25BD7": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "TableCD117FA1",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            Object {
+              "Action": Array [
+                "sqs:ReceiveMessage",
+                "sqs:ChangeMessageVisibility",
+                "sqs:GetQueueUrl",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "MySqsIntegrationMyQueue86A365E0",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "MySqsIntegrationLambdaServiceRoleDefaultPolicyE3E25BD7",
+        "Roles": Array [
+          Object {
+            "Ref": "MySqsIntegrationLambdaServiceRole9070BB37",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "MySqsIntegrationLambdaSqsEventSourcetestMySqsIntegrationMyQueue850113290C8914BC": Object {
+      "Properties": Object {
+        "EventSourceArn": Object {
+          "Fn::GetAtt": Array [
+            "MySqsIntegrationMyQueue86A365E0",
+            "Arn",
+          ],
+        },
+        "FunctionName": Object {
+          "Ref": "MySqsIntegrationLambda7FC99B39",
+        },
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
+    },
+    "MySqsIntegrationMyDeadLetterQueueCDE33C22": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "QueueName": "apigateway-dead-letter-queue",
+      },
+      "Type": "AWS::SQS::Queue",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "MySqsIntegrationMyQueue86A365E0": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "QueueName": "apigateway-queue",
+        "RedrivePolicy": Object {
+          "deadLetterTargetArn": Object {
+            "Fn::GetAtt": Array [
+              "MySqsIntegrationMyDeadLetterQueueCDE33C22",
+              "Arn",
+            ],
+          },
+          "maxReceiveCount": 1,
+        },
+      },
+      "Type": "AWS::SQS::Queue",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "PostModelD4C7F5B5": Object {
+      "Properties": Object {
+        "ContentType": "application/json",
+        "RestApiId": Object {
+          "Ref": "ApiGatewayIntegrations23935DC5",
+        },
+        "Schema": Object {
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "properties": Object {
+            "age": Object {
+              "type": "integer",
+            },
+            "name": Object {
+              "type": "string",
+            },
+          },
+          "required": Array [
+            "name",
+          ],
+          "title": "PostRequest",
+          "type": "object",
+        },
+      },
+      "Type": "AWS::ApiGateway::Model",
+    },
+    "PostValidator2B2DDAD7": Object {
+      "Properties": Object {
+        "Name": "validator",
+        "RestApiId": Object {
+          "Ref": "ApiGatewayIntegrations23935DC5",
+        },
+        "ValidateRequestBody": true,
+        "ValidateRequestParameters": false,
+      },
+      "Type": "AWS::ApiGateway::RequestValidator",
+    },
+    "TableCD117FA1": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "AttributeDefinitions": Array [
+          Object {
+            "AttributeName": "name",
+            "AttributeType": "S",
+          },
+        ],
+        "KeySchema": Array [
+          Object {
+            "AttributeName": "name",
+            "KeyType": "HASH",
+          },
+        ],
+        "ProvisionedThroughput": Object {
+          "ReadCapacityUnits": 5,
+          "WriteCapacityUnits": 5,
+        },
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Delete",
+    },
+  },
+  "Rules": Object {
+    "CheckBootstrapVersion": Object {
+      "Assertions": Array [
+        Object {
+          "Assert": Object {
+            "Fn::Not": Array [
+              Object {
+                "Fn::Contains": Array [
+                  Array [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  Object {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

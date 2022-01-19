@@ -29,6 +29,10 @@
       "type": "build"
     },
     {
+      "name": "eslint-config-prettier",
+      "type": "build"
+    },
+    {
       "name": "eslint-import-resolver-node",
       "type": "build"
     },
@@ -38,6 +42,10 @@
     },
     {
       "name": "eslint-plugin-import",
+      "type": "build"
+    },
+    {
+      "name": "eslint-plugin-prettier",
       "type": "build"
     },
     {
@@ -64,7 +72,16 @@
       "type": "build"
     },
     {
+      "name": "prettier",
+      "type": "build"
+    },
+    {
       "name": "projen",
+      "type": "build"
+    },
+    {
+      "name": "standard-version",
+      "version": "^9",
       "type": "build"
     },
     {
@@ -79,6 +96,18 @@
     {
       "name": "typescript",
       "type": "build"
+    },
+    {
+      "name": "@aws-sdk/client-dynamodb",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-sdk/util-dynamodb",
+      "type": "runtime"
+    },
+    {
+      "name": "@types/aws-lambda",
+      "type": "runtime"
     },
     {
       "name": "aws-cdk-lib",

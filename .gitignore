@@ -36,8 +36,13 @@ jspm_packages/
 junit.xml
 /coverage/
 !/.github/workflows/build.yml
+/dist/changelog.md
+/dist/version.txt
+!/.github/workflows/release.yml
 !/.mergify.yml
 !/.github/pull_request_template.md
+!/.prettierignore
+!/.prettierrc.json
 !/test/
 !/tsconfig.json
 !/tsconfig.dev.json
@@ -50,4 +55,4 @@ junit.xml
 /cdk.out/
 .cdk.staging/
 .parcel-cache/
-!/.github/workflows/upgrade.yml
+!/.github/workflows/upgrade-main.yml
