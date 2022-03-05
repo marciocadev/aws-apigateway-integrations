@@ -7,8 +7,9 @@ import {
   RequestValidator,
   RestApi,
 } from "aws-cdk-lib/aws-apigateway";
-import { AttributeType, Table } from "aws-cdk-lib/aws-dynamodb";
+import { AttributeType, StreamViewType, Table } from "aws-cdk-lib/aws-dynamodb";
 import { Construct } from "constructs";
+import { MyDynamoDBIntegration } from "./constructs/my-dynamodb-integration";
 import { MyLambdaIntegration } from "./constructs/my-lambda-integration";
 import { MySnsIntegration } from "./constructs/my-sns-integration";
 import { MySqsIntegration } from "./constructs/my-sqs-integration";
@@ -26,6 +27,7 @@ export class MyStack extends Stack {
         type: AttributeType.STRING,
       },
       removalPolicy: RemovalPolicy.DESTROY,
+      stream: StreamViewType.NEW_IMAGE,
     });
 
     // Um ApiGateway único para todos os endpoints do exemplo de integração
@@ -81,6 +83,13 @@ export class MyStack extends Stack {
 
     new MySnsIntegration(this, "MySnsIntegration", {
       resource: gateway.root.addResource("sns"),
+      model: requestModelPost,
+      validator: requestValidator,
+      table: table,
+    });
+
+    new MyDynamoDBIntegration(this, "MyDynamodbIntegration", {
+      resource: gateway.root.addResource("dynamodb"),
       model: requestModelPost,
       validator: requestValidator,
       table: table,

@@ -2,60 +2,54 @@ import { join } from "path";
 import { Aws } from "aws-cdk-lib";
 import { AwsIntegration, IntegrationOptions } from "aws-cdk-lib/aws-apigateway";
 import { Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
-import { Runtime } from "aws-cdk-lib/aws-lambda";
-import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import { Runtime, StartingPosition } from "aws-cdk-lib/aws-lambda";
+import { DynamoEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
-import { Queue } from "aws-cdk-lib/aws-sqs";
 import { Construct } from "constructs";
 import { MyIntegrationProps } from "./my-integration-props";
 
-export class MySqsIntegration extends Construct {
+export class MyDynamoDBIntegration extends Construct {
   constructor(scope: Construct, id: string, props: MyIntegrationProps) {
     super(scope, id);
 
     const lambda = new NodejsFunction(this, "Lambda", {
-      entry: join(__dirname, "../lambda-fns/delivery-by-queue.ts"),
+      entry: join(__dirname, "../lambda-fns/delivery-by-dynamodb.ts"),
       handler: "handler",
       runtime: Runtime.NODEJS_14_X,
       retryAttempts: 0,
-      environment: {
-        TABLE_NAME: props.table.tableName,
-      },
       bundling: {
         minify: true,
       },
     });
+    lambda.addEventSource(
+      new DynamoEventSource(props.table, {
+        startingPosition: StartingPosition.TRIM_HORIZON,
+        batchSize: 10,
+        retryAttempts: 0,
+      })
+    );
 
-    props.table.grantWriteData(lambda);
-
-    const apiGatewaySqsRole = new Role(this, "ApiGatewaySqsRole", {
+    const apiGatewayDynamoDBRole = new Role(this, "ApiGatewayDynamoDBRole", {
       assumedBy: new ServicePrincipal("apigateway.amazonaws.com"),
     });
-
-    const deadLetterQueue = new Queue(this, "MyDeadLetterQueue", {
-      queueName: "apigateway-dead-letter-queue",
-    });
-
-    const queue = new Queue(this, "MyQueue", {
-      queueName: "apigateway-queue",
-      deadLetterQueue: {
-        queue: deadLetterQueue,
-        maxReceiveCount: 1,
-      },
-    });
-    queue.grantSendMessages(apiGatewaySqsRole);
-    queue.grantConsumeMessages(lambda);
-
-    lambda.addEventSource(new SqsEventSource(queue));
+    props.table.grantWriteData(apiGatewayDynamoDBRole);
 
     const integrationOptions: IntegrationOptions = {
-      credentialsRole: apiGatewaySqsRole,
+      credentialsRole: apiGatewayDynamoDBRole,
       requestParameters: {
         "integration.request.header.Content-Type":
           "'application/x-www-form-urlencoded'", // "'application/x-amz-json-1.1'"
       },
       requestTemplates: {
-        "application/json": "Action=SendMessage&" + "MessageBody=$input.body",
+        "application/json": JSON.stringify({
+          TableName: props.table.tableName,
+          KeyConditionExpression: "name = :name",
+          Item: {
+            name: {
+              S: "$input.path('$.name')",
+            },
+          },
+        }),
       },
       integrationResponses: [
         {
@@ -66,10 +60,9 @@ export class MySqsIntegration extends Construct {
     };
 
     const integrationPost = new AwsIntegration({
-      service: "sqs",
+      service: "dynamodb",
+      action: "PutItem",
       region: `${Aws.REGION}`,
-      path: `${Aws.ACCOUNT_ID}/${queue.queueName}`,
-      integrationHttpMethod: "POST",
       options: integrationOptions,
     });
 
