@@ -13,60 +13,21 @@ export class MyDynamoDBIntegration extends Construct {
     });
     props.table.grantWriteData(apiGatewayDynamoRole);
 
-    // const integrationOptions: IntegrationOptions = {
-    //   credentialsRole: apiGatewayDynamoRole,
-    //   requestTemplates: {
-    //     'application/json': JSON.stringify({
-    //       'TableName': props.table.tableName,
-    //       'Item': {
-    //         'pk': {
-    //           'S': '$context.requestId',
-    //         },
-    //         'name': {
-    //           'S': '$input.path(\'$.name\')',
-    //         },
-    //         'age': {
-    //           'N': '$input.path(\'$.age\')',
-    //         },
-    //         'delivery-by': {
-    //           'S': 'apigateway-dynamodb',
-    //         }
-    //       }
-    //     })
-    //   },
-    //   integrationResponses: [
-    //     {
-    //       statusCode: '200',
-    //       responseTemplates: {
-    //         'application/json': '$context.requestId',
-    //       }
-    //     }
-    //   ],
-    // };
     const integrationOptions: IntegrationOptions = {
       credentialsRole: apiGatewayDynamoRole,
       requestTemplates: {
         'application/json': `
-        #if($input.path(\'$.age\').toString() != '')
         {
           "TableName":"${props.table.tableName}",
           "Item": {
             "pk":{"S":"$context.requestId"},
             "name":{"S":"$input.path('$.name')"},
-            "age":{"N":"$input.path('$.age')"},
+            #if($input.path('$.age').toString() != '')
+              "age":{"N":"$input.path('$.age')"},
+            #end
             "delivery-by":{"S":"apigateway-dynamodb"}
           }
-        }
-        #else
-        {
-          "TableName":"${props.table.tableName}",
-          "Item": {
-            "pk":{"S":"$context.requestId"},
-            "name":{"S":"$input.path('$.name')"},
-            "delivery-by":{"S":"apigateway-dynamodb"}
-          }
-        }
-        #end`
+        }`
       },
       integrationResponses: [
         {
