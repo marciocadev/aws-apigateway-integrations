@@ -49,13 +49,12 @@ export class MySnsIntegration extends Construct {
           "Action=Publish&" +
           "TargetArn=$util.urlEncode('" +
           topic.topicArn +
-          "')&" +
-          "Message=$input.body&",
+          "')&Message=$input.body&",
       },
       integrationResponses: [
         {
           statusCode: "200",
-          responseTemplates: { "application/json": "" },
+          responseTemplates: { "application/json": "{searchKey: $input.path('$.PublishResponse.PublishResult.MessageId')}" },
         },
       ],
     };

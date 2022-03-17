@@ -12,6 +12,7 @@ import { Construct } from "constructs";
 import { MyLambdaIntegration } from "./constructs/my-lambda-integration";
 import { MySnsIntegration } from "./constructs/my-sns-integration";
 import { MySqsIntegration } from "./constructs/my-sqs-integration";
+import { MyStepFunctionIntegration } from "./constructs/my-step-function-integration";
 
 export class MyStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
@@ -22,7 +23,7 @@ export class MyStack extends Stack {
     */
     const table = new Table(this, "Table", {
       partitionKey: {
-        name: "name",
+        name: "pk",
         type: AttributeType.STRING,
       },
       removalPolicy: RemovalPolicy.DESTROY,
@@ -55,6 +56,19 @@ export class MyStack extends Stack {
       schema: requestSchemaPost,
     });
 
+    const responseModel: Model = new Model(this, 'ResponseModel', {
+      restApi: gateway,
+      contentType: "application/json",
+      schema: {
+        title: "ResponseRequest",
+        type: JsonSchemaType.OBJECT,
+        schema: JsonSchemaVersion.DRAFT4,
+        properties: {
+          result: { type: JsonSchemaType.OBJECT },
+        }
+      }
+    });
+
     /* Cria um validador indicando o que deve ser validado no payload
         recebido, no nosso caso serão validados apenas o 'body' das mensagens
     */
@@ -70,6 +84,7 @@ export class MyStack extends Stack {
       model: requestModelPost,
       validator: requestValidator,
       table: table,
+      response: responseModel,
     });
 
     new MySqsIntegration(this, "MySqsIntegration", {
@@ -77,6 +92,7 @@ export class MyStack extends Stack {
       model: requestModelPost,
       validator: requestValidator,
       table: table,
+      response: responseModel,
     });
 
     new MySnsIntegration(this, "MySnsIntegration", {
@@ -84,6 +100,15 @@ export class MyStack extends Stack {
       model: requestModelPost,
       validator: requestValidator,
       table: table,
+      response: responseModel,
+    });
+
+    new MyStepFunctionIntegration(this, "MyStepFunctionIntegration", {
+      resource: gateway.root.addResource('step-function'),
+      model: requestModelPost,
+      validator: requestValidator,
+      table: table,
+      response: responseModel,
     });
   }
 }

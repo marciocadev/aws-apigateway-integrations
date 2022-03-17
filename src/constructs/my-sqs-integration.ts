@@ -55,12 +55,12 @@ export class MySqsIntegration extends Construct {
           "'application/x-www-form-urlencoded'", // "'application/x-amz-json-1.1'"
       },
       requestTemplates: {
-        "application/json": "Action=SendMessage&" + "MessageBody=$input.body",
+        "application/json": "Action=SendMessage&MessageBody=$input.body",
       },
       integrationResponses: [
         {
           statusCode: "200",
-          responseTemplates: { "application/json": "" },
+          responseTemplates: { "application/json": "{searchKey: $input.path('$.SendMessageResponse.SendMessageResult.MessageId')}" },
         },
       ],
     };
@@ -74,7 +74,7 @@ export class MySqsIntegration extends Construct {
     });
 
     props.resource.addMethod("POST", integrationPost, {
-      methodResponses: [{ statusCode: "200" }],
+      methodResponses: [{ statusCode: "200"}],
       requestModels: { "application/json": props.model },
       requestValidator: props.validator,
     });
