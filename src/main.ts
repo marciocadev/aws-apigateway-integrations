@@ -56,19 +56,6 @@ export class MyStack extends Stack {
       schema: requestSchemaPost,
     });
 
-    const responseModel: Model = new Model(this, 'ResponseModel', {
-      restApi: gateway,
-      contentType: "application/json",
-      schema: {
-        title: "ResponseRequest",
-        type: JsonSchemaType.OBJECT,
-        schema: JsonSchemaVersion.DRAFT4,
-        properties: {
-          result: { type: JsonSchemaType.OBJECT },
-        }
-      }
-    });
-
     /* Cria um validador indicando o que deve ser validado no payload
         recebido, no nosso caso serão validados apenas o 'body' das mensagens
     */
@@ -84,7 +71,6 @@ export class MyStack extends Stack {
       model: requestModelPost,
       validator: requestValidator,
       table: table,
-      response: responseModel,
     });
 
     new MySqsIntegration(this, "MySqsIntegration", {
@@ -92,7 +78,6 @@ export class MyStack extends Stack {
       model: requestModelPost,
       validator: requestValidator,
       table: table,
-      response: responseModel,
     });
 
     new MySnsIntegration(this, "MySnsIntegration", {
@@ -100,7 +85,6 @@ export class MyStack extends Stack {
       model: requestModelPost,
       validator: requestValidator,
       table: table,
-      response: responseModel,
     });
 
     new MyStepFunctionIntegration(this, "MyStepFunctionIntegration", {
@@ -108,7 +92,6 @@ export class MyStack extends Stack {
       model: requestModelPost,
       validator: requestValidator,
       table: table,
-      response: responseModel,
     });
   }
 }

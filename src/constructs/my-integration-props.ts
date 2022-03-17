@@ -10,5 +10,4 @@ export interface MyIntegrationProps {
   model: IModel;
   validator: IRequestValidator;
   table: ITable;
-  response: IModel;
 }
