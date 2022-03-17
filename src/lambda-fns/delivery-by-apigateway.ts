@@ -4,15 +4,14 @@ import {
   PutItemCommandInput,
 } from "@aws-sdk/client-dynamodb";
 import { marshall } from "@aws-sdk/util-dynamodb";
-import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
-import sha256 from 'crypto-js/sha256';
+import { APIGatewayEvent, APIGatewayProxyResult, Context } from "aws-lambda";
 
 const client = new DynamoDBClient({ region: process.env.AWS_REGION });
 
-export const handler = async (event: APIGatewayEvent) => {
+export const handler = async (event: APIGatewayEvent, context: Context) => {
   const payload = JSON.parse(event.body || "");
 
-  payload["pk"] = sha256(JSON.stringify(payload)).toString();
+  payload["pk"] = context.awsRequestId;
   payload["delivery-by"] = "apigateway-lambda-dynamo";
 
   const input: PutItemCommandInput = {
@@ -22,7 +21,7 @@ export const handler = async (event: APIGatewayEvent) => {
 
   let result: APIGatewayProxyResult = {
     statusCode: 200,
-    body: JSON.stringify({"searchKey": payload["pk"]}),
+    body: JSON.stringify({"pk": payload["pk"]}),
   };
 
   try {

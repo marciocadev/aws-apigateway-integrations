@@ -13,6 +13,7 @@ import { MyLambdaIntegration } from "./constructs/my-lambda-integration";
 import { MySnsIntegration } from "./constructs/my-sns-integration";
 import { MySqsIntegration } from "./constructs/my-sqs-integration";
 import { MyStepFunctionIntegration } from "./constructs/my-step-function-integration";
+import { MyDynamoDBIntegration } from "./constructs/my-dynamodb-integration";
 
 export class MyStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
@@ -22,6 +23,7 @@ export class MyStack extends Stack {
        um objeto com os parâmetros name, age e delivery-by
     */
     const table = new Table(this, "Table", {
+      tableName: "ApiGatewayIntegration",
       partitionKey: {
         name: "pk",
         type: AttributeType.STRING,
@@ -89,6 +91,13 @@ export class MyStack extends Stack {
 
     new MyStepFunctionIntegration(this, "MyStepFunctionIntegration", {
       resource: gateway.root.addResource('step-function'),
+      model: requestModelPost,
+      validator: requestValidator,
+      table: table,
+    });
+
+    new MyDynamoDBIntegration(this, "MyDynamoDBIntegration", {
+      resource: gateway.root.addResource("dynamodb"),
       model: requestModelPost,
       validator: requestValidator,
       table: table,

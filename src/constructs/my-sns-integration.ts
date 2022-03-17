@@ -54,7 +54,9 @@ export class MySnsIntegration extends Construct {
       integrationResponses: [
         {
           statusCode: "200",
-          responseTemplates: { "application/json": "{searchKey: $input.path('$.PublishResponse.PublishResult.MessageId')}" },
+          responseTemplates: { 
+            "application/json": "{pk: $input.path('$.PublishResponse.PublishResult.MessageId')}" 
+          },
         },
       ],
     };

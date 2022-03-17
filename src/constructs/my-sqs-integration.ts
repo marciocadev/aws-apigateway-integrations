@@ -60,7 +60,7 @@ export class MySqsIntegration extends Construct {
       integrationResponses: [
         {
           statusCode: "200",
-          responseTemplates: { "application/json": "{searchKey: $input.path('$.SendMessageResponse.SendMessageResult.MessageId')}" },
+          responseTemplates: { "application/json": "{pk: $input.path('$.SendMessageResponse.SendMessageResult.MessageId')}" },
         },
       ],
     };

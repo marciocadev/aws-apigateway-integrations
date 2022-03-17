@@ -58,13 +58,13 @@ export class MyStepFunctionIntegration extends Construct {
         {
           statusCode: '200',
           responseTemplates: {
-            'application/json': `{"done": "${sha256(JSON.stringify('$input.body'))}"}`,
+            'application/json': `{"pk": "${sha256(JSON.stringify('$input.body'))}"}`,
           },
         },
       ],
       requestTemplates: {
         'application/json': `{
-          "input": "{ \\"teste\\": $util.escapeJavaScript($input.body), \\"base64\\": \\"${sha256(JSON.stringify('$input.body'))}\\" }",
+          "input": "$util.escapeJavaScript($input.body)",
           "stateMachineArn": "${statemachine.stateMachineArn}"
         }`,
       },
