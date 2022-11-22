@@ -3,6 +3,7 @@ import {
   JsonSchema,
   JsonSchemaType,
   JsonSchemaVersion,
+  MethodLoggingLevel,
   Model,
   RequestValidator,
   RestApi,
@@ -34,6 +35,10 @@ export class MyStack extends Stack {
     // Um ApiGateway único para todos os endpoints do exemplo de integração
     const gateway = new RestApi(this, "ApiGatewayIntegrations", {
       restApiName: "apigateway-integrations",
+      deployOptions: {
+        loggingLevel: MethodLoggingLevel.INFO,
+        dataTraceEnabled: true,
+      }
     });
 
     /* JsonSchema para o ApiGateway, neste schema o gateway espera um json
